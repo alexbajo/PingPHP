@@ -31,15 +31,40 @@ $ipAddresses = file('devices.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
 
 ?>
 
-<form method="POST" action="">
-    <input type="text" name="ip_to_add" placeholder="Introduce una IP">
-    <input type="submit" value="Añadir IP">
-</form>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>PingPHP</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 2em; }
+        h1 { text-align: center; }
+        form.add-form { text-align: center; margin-bottom: 1em; }
+        form.add-form input[type=text] { padding: 0.5em; width: 200px; }
+        form.add-form input[type=submit] { padding: 0.5em 1em; }
+        .device { background: #fff; border: 1px solid #ddd; padding: 0.5em; margin-bottom: 0.5em; }
+        .device span { font-weight: bold; }
+        .device form { display: inline; }
+    </style>
+</head>
+<body>
+    <h1>Ping de dispositivos</h1>
 
-<?php
-// Hacemos ping a cada IP y mostramos un botón para eliminarla.
-foreach ($ipAddresses as $ip) {
-    echo ping($ip);
-    echo " <form method='POST' action='' style='display:inline;'><input type='hidden' name='ip_to_delete' value='{$ip}'><input type='submit' value='Borrar'></form><br>";
-}
-?>
+    <form class="add-form" method="POST" action="">
+        <input type="text" name="ip_to_add" placeholder="Introduce una IP">
+        <input type="submit" value="Añadir IP">
+    </form>
+
+    <div class="devices">
+        <?php foreach ($ipAddresses as $ip): ?>
+            <div class="device">
+                <?php echo ping($ip); ?>
+                <form method="POST" action="">
+                    <input type="hidden" name="ip_to_delete" value="<?php echo $ip; ?>">
+                    <input type="submit" value="Borrar">
+                </form>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</body>
+</html>
